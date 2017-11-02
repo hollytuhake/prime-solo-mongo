@@ -1,0 +1,36 @@
+use deneb
+
+//0. Create a collection named orders.
+db.createCollection('orders')
+
+//1. Insert at least 3 documents that represent an order. 
+//IMPORTANT: See section below for fields. Order dates should be: 2017-02-03, 2017-04-04, 2017-01-02
+var orders = db.orders
+ orders.insert({orderDate:new ISODate('2017-02-03')})
+ orders.insert({orderDate:new ISODate('2017-04-04')})
+ orders.insert({orderDat:new ISODate('2017-01-02')})
+
+ 
+
+//2. Find all orders and make them look pretty.
+orders.find().pretty()
+
+//3. Find all orders with an orderDate that is after 1/31/2017.
+orders.find({orderDate:{$gt:ISODate('2017-01-31')}})
+
+//4. Change the orderTotal from 2/3/2017 to 63 dollars 
+//(you do NOT have to ensure the lineItems' unitPrice * quantity add up to the orderTotal)
+orders.update({_id:'ObjectId("59fb653f6d20ef2365986db4")'},{$set:{orderTotal:"63"}})
+(fyi lecture notes update function is missing curly braces arounf the set property)
+
+//5. Add another lineItem to the order from 4/4/2017
+orders.update({_id : 'ObjectId("59fb65596d20ef2365986db5")'},{$set:{"lineItem.1.productName":'pencils'}})
+
+//6. Change the first lineItem in the order from 1/2/2017 to be for 2 'transistor radio's
+orders.update
+orders.update({_id : 'ObjectId("59fb65706d20ef2365986db6")'},{$set:{"lineItem.1.quantity":2}})
+orders.update({_id : 'ObjectId("59fb65706d20ef2365986db6")'},{$set:{"lineItem.1.prooductName":'transistor radios'}})
+
+//7. Find orders with lineItems that have a quantity that is less than 10, but greater than 2. 
+//You will have to research $elemMatch
+orders.find({lineItem:{$elemMatch:{quantity:{$lt:10}, quantity:{$gt:2}}}})
